@@ -1,4 +1,4 @@
-BUILD_ROOT=/media/sergiano/DATA/Resources/Work/Git/ESTC-build-system
+BUILD_ROOT=/media/sergiano/DATA/Resources/Work/Git/ESTC_Labs
 OBJS = main.o
 
 BINARY_NAME = main
