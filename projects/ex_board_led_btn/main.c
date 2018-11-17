@@ -51,20 +51,22 @@ void AllInit(void)
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
 
 	GPIO_InitTypeDef LED;
+
 	LED.GPIO_Pin   = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10; 
 	LED.GPIO_Mode  = GPIO_Mode_OUT;
 	LED.GPIO_OType = GPIO_OType_PP;
 	LED.GPIO_Speed = GPIO_Speed_100MHz;
 	LED.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-	GPIO_Init(GPIOA, &LED);
 
 	GPIO_InitTypeDef BTN;
-	BTN.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
+
+	BTN.GPIO_Pin = GPIO_Pin_0;
 	BTN.GPIO_Mode  = GPIO_Mode_IN;
 	BTN.GPIO_OType = GPIO_OType_PP;
 	BTN.GPIO_Speed = GPIO_Speed_2MHz;
 	BTN.GPIO_PuPd  = GPIO_PuPd_UP;
-	GPIO_Init(GPIOE, &BTN);
-
+	
+	GPIO_Init(GPIOA, &LED);
 	GPIO_SetBits(GPIOA, GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10);
+	GPIO_Init(GPIOE, &BTN);
 }
