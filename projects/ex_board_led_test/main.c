@@ -2,43 +2,45 @@
 
 #define SWITCH_DELAY 250000
 
+void AllInit(void);
+
 int main(void)
 {
-  GPIO_InitTypeDef GPIO_InitStructure;
+	AllInit();
 
-  /* Enable peripheral clock for LEDs port */
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+	while (1)
+	{
+		int i;
 
-  /* Init LEDs */
-  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10; 
-  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
+		GPIO_ResetBits(GPIOA, GPIO_Pin_8);
+		for (i = 0; i < SWITCH_DELAY; i++);
 
-  GPIO_SetBits(GPIOA, GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10);
+		GPIO_SetBits(GPIOA, GPIO_Pin_8);
+		for (i = 0; i < SWITCH_DELAY; i++);
 
-  while (1)
-  {
-    int i;
+		GPIO_ResetBits(GPIOA, GPIO_Pin_9);
+		for (i = 0; i < SWITCH_DELAY; i++);
 
-    GPIO_ResetBits(GPIOA, GPIO_Pin_8);
-    for (i = 0; i < SWITCH_DELAY; i++);
+		GPIO_SetBits(GPIOA, GPIO_Pin_9);
+		for (i = 0; i < SWITCH_DELAY; i++);
 
-    GPIO_SetBits(GPIOA, GPIO_Pin_8);
-    for (i = 0; i < SWITCH_DELAY; i++);
+		GPIO_ResetBits(GPIOA, GPIO_Pin_10);
+		for (i = 0; i < SWITCH_DELAY; i++);
 
-    GPIO_ResetBits(GPIOA, GPIO_Pin_9);
-    for (i = 0; i < SWITCH_DELAY; i++);
+		GPIO_SetBits(GPIOA, GPIO_Pin_10);
+		for (i = 0; i < SWITCH_DELAY; i++);
+	}
+}
 
-    GPIO_SetBits(GPIOA, GPIO_Pin_9);
-    for (i = 0; i < SWITCH_DELAY; i++);
-
-    GPIO_ResetBits(GPIOA, GPIO_Pin_10);
-    for (i = 0; i < SWITCH_DELAY; i++);
-
-    GPIO_SetBits(GPIOA, GPIO_Pin_10);
-    for (i = 0; i < SWITCH_DELAY; i++);
-  }
+void AllInit(void)
+{
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10; 
+	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	GPIO_SetBits(GPIOA, GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10);
 }
