@@ -156,11 +156,8 @@
 #define DISABLE_HSE
 
 /* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLL_M) * PLL_N */
-#ifdef DISABLE_HSE
+
   #define PLL_M   8
-#else
-  #define PLL_M   168
-#endif
 
 #define PLL_N    336
 
