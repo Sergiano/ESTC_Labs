@@ -1,7 +1,7 @@
 #include "main.h"
 
 #define PRESCALER 42000
-#define PERIOD 1000
+#define PERIOD 2000
 
 void AllInit(void);
 void TIM2_IRQHandler(void);

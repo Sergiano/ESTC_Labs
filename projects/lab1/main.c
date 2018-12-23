@@ -1,6 +1,6 @@
 #include "main.h"
 
-#define SWITCH_DELAY 100000
+#define SWITCH_DELAY 1000000
 
 void AllInit(void);
 void Blink(void);
@@ -15,15 +15,15 @@ int main(void)
 
 	while(1)
 	{	
-		if (is_earlier_pushed == 0 && GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_0) == 0)
+		if (!(is_earlier_pushed || GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_0)))
 		{
 			blink_type = (blink_type + 1) % 2;
 			is_earlier_pushed = 1;
 		}
 		
-		if (GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_0) == 1) is_earlier_pushed = 0;
+		if (GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_0)) is_earlier_pushed = 0;
 		
-		offset = (blink_type == 0) ? (offset + 1) % 4 : (offset + 3) % 4; 			
+		offset = (!blink_type) ? (offset + 1) % 4 : (offset + 3) % 4;
 
 		Blink();
 	}

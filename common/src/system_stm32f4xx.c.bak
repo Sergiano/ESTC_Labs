@@ -56,7 +56,7 @@
   *-----------------------------------------------------------------------------
   *        APB2 Prescaler                         | 2
   *-----------------------------------------------------------------------------
-  *        HSE Frequency(Hz)                      | 25000000
+  *        HSE Frequency(Hz)                      | 8000000
   *-----------------------------------------------------------------------------
   *        PLL_M                                  | 25
   *-----------------------------------------------------------------------------
@@ -152,9 +152,14 @@
 /******************************************************************************/
 
 /************************* PLL Parameters *************************************/
+
+#define DISABLE_HSE
+
 /* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLL_M) * PLL_N */
-#define PLL_M      8//25
-#define PLL_N      336//288
+
+  #define PLL_M   25//8
+
+#define PLL_N    288//336
 
 /* SYSCLK = PLL_VCO / PLL_P */
 #define PLL_P      2
@@ -353,6 +358,7 @@ static void SetSysClock(void)
 /******************************************************************************/
   __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
 
+#ifndef DISABLE_HSE
   /* Enable HSE */
   RCC->CR |= ((uint32_t)RCC_CR_HSEON);
 
@@ -362,6 +368,7 @@ static void SetSysClock(void)
     HSEStatus = RCC->CR & RCC_CR_HSERDY;
     StartUpCounter++;
   } while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
+#endif  /* ifndef DISABLE_HSE */
 
   if ((RCC->CR & RCC_CR_HSERDY) != RESET)
   {
@@ -431,6 +438,8 @@ static void SetSysClock(void)
   else
   { /* If HSE fails to start-up, the application will have wrong clock
          configuration. User can add here some code to deal with this error */
+    RCC->PLLCFGR = PLL_M | (PLL_N << 6) | (((PLL_P >> 1) - 1) << 16) |
+                   (RCC_PLLCFGR_PLLSRC_HSI) | (PLL_Q << 24);
   }
 
 }
@@ -533,6 +542,7 @@ void SystemInit_ExtMemCtl(void)
   FMC_Bank1E->BWTR[2] = 0x0fffffff;
 /*
   Bank1_SRAM2 is configured as follow:
+
   NORSRAMTimingStructure.FMC_AddressSetupTime = 1;
   NORSRAMTimingStructure.FMC_AddressHoldTime = 0;
   NORSRAMTimingStructure.FMC_DataSetupTime = 2;
@@ -540,6 +550,7 @@ void SystemInit_ExtMemCtl(void)
   NORSRAMTimingStructure.FMC_CLKDivision = 0;
   NORSRAMTimingStructure.FMC_DataLatency = 0;
   NORSRAMTimingStructure.FMC_AccessMode = FMC_AccessMode_A;
+
   FMC_NORSRAMInitStructure.FMC_Bank = FMC_Bank1_NORSRAM2;
   FMC_NORSRAMInitStructure.FMC_DataAddressMux = FMC_DataAddressMux_Disable;
   FMC_NORSRAMInitStructure.FMC_MemoryType = FMC_MemoryType_SRAM;
@@ -717,6 +728,7 @@ void SystemInit_ExtMemCtl(void)
 
 /*
   Bank1_SDRAM is configured as follow:
+
   FMC_SDRAMTimingInitStructure.FMC_LoadToActiveDelay = 2;
   FMC_SDRAMTimingInitStructure.FMC_ExitSelfRefreshDelay = 6;
   FMC_SDRAMTimingInitStructure.FMC_SelfRefreshTime = 4;
@@ -724,6 +736,7 @@ void SystemInit_ExtMemCtl(void)
   FMC_SDRAMTimingInitStructure.FMC_WriteRecoveryTime = 2;
   FMC_SDRAMTimingInitStructure.FMC_RPDelay = 2;
   FMC_SDRAMTimingInitStructure.FMC_RCDDelay = 2;
+
   FMC_SDRAMInitStructure.FMC_Bank = SDRAM_BANK;
   FMC_SDRAMInitStructure.FMC_ColumnBitsNumber = FMC_ColumnBits_Number_8b;
   FMC_SDRAMInitStructure.FMC_RowBitsNumber = FMC_RowBits_Number_11b;
