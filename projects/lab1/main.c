@@ -8,13 +8,13 @@ int main(void)
 
 	while(1)
 	{	
-		if (!(is_earlier_pushed || GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_0)))
+		if (!(is_earlier_pushed || GPIO_ReadInputDataBit(GPIOE, 0x0001)))
 		{
 			blink_type = (blink_type + 1) % 2;
 			is_earlier_pushed = 1;
 		}
 		
-		if (GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_0)) is_earlier_pushed = 0;
+		if (GPIO_ReadInputDataBit(GPIOE, 0x0001)) is_earlier_pushed = 0;
 	
 		GPIO_SetBits(GPIOD, 0x1000 << (offset = (!blink_type) ? (offset + 1) % 4 : (offset + 3) % 4));
 
