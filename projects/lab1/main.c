@@ -1,10 +1,18 @@
+/// \file main.с
+/// ESTC 1-st laboratory work.
 #include "main.h"
 
+/// \brief Entry point
 int main(void)
 {
 	AllInit();	
-
-	u16 offset = 0, blink_type = 0, is_earlier_pushed = 0;
+	
+/// \brief bit offset
+	u16 offset = 0;
+/// \brief blinking order
+	u16 blink_type = 0;
+/// \brief push checker
+	u16 is_earlier_pushed = 0;
 
 	while(1)
 	{	

@@ -1,10 +1,20 @@
+/// \file main.с  
+/// ESTC 2-nd laboratory work.
 #include "main.h"
 
+/// \brief Entry point
 int main(void)
 {
 	AllInit();	
 
-	u16 offset = 0, blink_type = 0, is_earlier_pushed = 0, light_or_dark = 0;
+/// \brief bit offset
+	u16 offset = 0;
+/// \brief blinking order
+	u16 blink_type = 0;
+/// \brief push checker
+	u16 is_earlier_pushed = 0;
+/// \brief blink switch
+	u16 light_or_dark = 0;
 
 	while(1)
 	{			
@@ -18,7 +28,7 @@ int main(void)
 	
 		if (!TIM_GetCounter(TIM2))
 		{
-			!(++light_or_dark%2) ? GPIO_ResetBits(GPIOD, 0x1000 << offset) : 
+			!(light_or_dark = (light_or_dark + 1) % 2) ? GPIO_ResetBits(GPIOD, 0x1000 << offset) : 
 			GPIO_SetBits(GPIOD, 0x1000 << (offset = (!blink_type) ? (offset + 1) % 4 : (offset + 3) % 4));
 		}
 	}

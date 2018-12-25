@@ -1,10 +1,25 @@
+/// \file main.с  
+/// ESTC 3-th laboratory work.
 #include "main.h"
 
-u16 offset = 0, blink_type = 0, light_or_dark = 0;
+/// \brief bit offset
+	u16 offset;
+/// \brief blinking order
+	u16 blink_type;
+/// \brief blink switch
+	u16 light_or_dark;
+/// \brief debounce params
+u32 systime, timeout;
 
+/// \brief Entry point
 int main(void)
 {
+	offset = blink_type = light_or_dark = 0;
+	
 	AllInit();
+
+	DebounceLaunch();
+
 	while(1);
 }
 
@@ -12,19 +27,41 @@ void TIM2_IRQHandler(void)
 {
 	if(TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
 	{	
-		!(++light_or_dark%2) ? 	GPIO_ResetBits(GPIOD, 0x1000 << offset) : 
-		GPIO_SetBits(GPIOD, 0x1000 << (offset = (!blink_type) ? (offset + 1) % 4 : (offset + 3) % 4));
+		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);		
 
-		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+		!(light_or_dark = (light_or_dark + 1) % 2) ? GPIO_ResetBits(GPIOD, 0x1000 << offset) : 
+		GPIO_SetBits(GPIOD, 0x1000 << (offset = (!blink_type) ? (offset + 1) % 4 : (offset + 3) % 4));
 	}
 }
 
 void EXTI0_IRQHandler(void)
 {
-   if (EXTI_GetITStatus(EXTI_Line0) != RESET)
-   {
-      EXTI_ClearITPendingBit(EXTI_Line0);
+	if (EXTI_GetITStatus(EXTI_Line0) != RESET)
+	{
+		EXTI_ClearITPendingBit(EXTI_Line0);
 
-      blink_type = (blink_type + 1) % 2;
-   }
+		if (timeout) return;
+
+		blink_type = (blink_type + 1) % 2;
+
+		timeout = systime;
+	}
+}
+
+void DebounceLaunch(void)
+{
+    RCC_ClocksTypeDef RCC_Clocks;
+    RCC_GetClocksFreq(&RCC_Clocks);
+
+    systime = 0;
+    timeout = 0;
+
+    (void)SysTick_Config(RCC_Clocks.HCLK_Frequency / 10000);
+}
+
+void SysTick_Handler(void)
+{
+    systime++;
+
+    if (timeout && systime - timeout > 100) timeout = 0;
 }
