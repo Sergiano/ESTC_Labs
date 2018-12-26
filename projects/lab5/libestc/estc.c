@@ -65,6 +65,21 @@ void ESTC_ExBoardLedsSetColorRGB(u8 red, u8 green, u8 blue)
     TIM_SetCompare3(TIM1, 65 * blue );
 }
 
+void ESTC_ExBoardLedsSetColorRed(u8 red)
+{
+    TIM_SetCompare1(TIM1, 65 * red );
+}
+
+void ESTC_ExBoardLedsSetColorGreen(u8 green)
+{
+    TIM_SetCompare2(TIM1, 65 * green );
+}
+
+void ESTC_ExBoardLedsSetColorBlue(u8 blue)
+{
+    TIM_SetCompare3(TIM1, 65 * blue );
+}
+
 void ESTC_ExBoardLedsSetColorHEX(uint32_t hexcolor)
 {
 	TIM_SetCompare1(TIM1, 65 * (u8)(hexcolor >> 16));
