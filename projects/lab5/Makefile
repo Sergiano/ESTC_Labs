@@ -1,4 +1,4 @@
-all: example
+all: clean library example
 
 flash_example: example
 	@$(MAKE) -C example flash

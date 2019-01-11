@@ -21,15 +21,16 @@ int main(void)
 	green = 0;
 	blue = 0;
 
-	onboard_leds[0] = 0x1000;
-	onboard_leds[1] = 0x4000;
-	onboard_leds[2] = 0x8000;
+	onboard_leds[0] = GPIO_Pin_14;
+	onboard_leds[1] = GPIO_Pin_12;
+	onboard_leds[2] = GPIO_Pin_15;
 
 	DebounceLaunch();
 
 	ESTC_InitExBoardAndRunPWM();
 
     GPIO_SetBits(GPIOD, onboard_leds[color]);
+
 	ESTC_ExBoardLedsSetColorHEX(0x4B0082);
 
     while (1);

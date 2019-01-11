@@ -29,8 +29,9 @@ void TIM2_IRQHandler(void)
 	{	
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);		
 
-		!(light_or_dark = (light_or_dark + 1) % 2) ? GPIO_ResetBits(GPIOD, 0x1000 << offset) : 
-		GPIO_SetBits(GPIOD, 0x1000 << (offset = (!blink_type) ? (offset + 1) % 4 : (offset + 3) % 4));
+		!(light_or_dark = (light_or_dark + 1) % 2) ? 
+		GPIO_ResetBits(GPIOA, GPIO_Pin_8 << (offset = (!blink_type) ? ((offset + 1) % 3) : ((offset + 2) % 3))) : 
+		GPIO_SetBits(GPIOA, GPIO_Pin_8 << offset);		
 	}
 }
 
